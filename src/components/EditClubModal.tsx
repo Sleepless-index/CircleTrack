@@ -21,7 +21,7 @@ export default function EditClubModal({ club, onConfirm, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4 animate-fade-in">
-      <div className="bg-surface-raised border border-surface-overlay rounded-2xl w-full max-w-sm p-5 flex flex-col gap-4">
+      <div className="bg-surface-raised border border-white/8 rounded-2xl w-full max-w-sm p-5 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="text-white font-semibold text-base">Edit Club</h2>
           <button onClick={onClose} className="text-white/20 hover:text-white/50 transition-colors p-1 -mr-1">
@@ -68,14 +68,14 @@ export default function EditClubModal({ club, onConfirm, onClose }: Props) {
             onChange={(e) => setName(e.target.value)}
             autoFocus
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-            className="bg-surface border border-surface-overlay rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors"
+            className="bg-surface border border-white/8 rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors"
           />
         </div>
 
         <div className="flex gap-2 pt-1">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 rounded-xl border border-surface-overlay text-white/40 text-sm hover:border-white/15 hover:text-white/60 transition-colors"
+            className="flex-1 py-2.5 rounded-xl border border-white/8 text-white/40 text-sm hover:border-white/15 hover:text-white/60 transition-colors"
           >
             Cancel
           </button>
@@ -92,7 +92,7 @@ export default function EditClubModal({ club, onConfirm, onClose }: Props) {
       {/* Rank picker overlay */}
       {pickingRank && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center z-60 p-4 animate-fade-in">
-          <div className="bg-surface-raised border border-surface-overlay rounded-2xl w-full max-w-sm p-5 flex flex-col gap-4">
+          <div className="bg-surface-raised border border-white/8 rounded-2xl w-full max-w-sm p-5 flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h3 className="text-white font-semibold text-sm">Select Rank</h3>
               <button onClick={() => setPickingRank(false)} className="text-white/20 hover:text-white/50 transition-colors p-1 -mr-1">

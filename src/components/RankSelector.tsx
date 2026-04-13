@@ -18,7 +18,7 @@ export default function RankSelector({ value, onChange }: Props) {
           className={`py-2 rounded-lg text-[11px] font-medium transition-all ${
             value === null
               ? "bg-accent-dim text-accent border border-accent/25"
-              : "bg-surface border border-surface-border text-white/25 hover:border-white/15 hover:text-white/50"
+              : "bg-surface border border-white/8 text-white/25 hover:border-white/15 hover:text-white/50"
           }`}
         >
           None
@@ -31,7 +31,7 @@ export default function RankSelector({ value, onChange }: Props) {
             className={`py-2 rounded-lg text-[11px] font-medium transition-all ${
               value === r
                 ? "bg-accent-dim text-accent border border-accent/25"
-                : "bg-surface border border-surface-border text-white/30 hover:border-white/15 hover:text-white/50"
+                : "bg-surface border border-white/8 text-white/30 hover:border-white/15 hover:text-white/50"
             }`}
           >
             {displayRank(r)}

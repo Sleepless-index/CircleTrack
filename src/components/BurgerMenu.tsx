@@ -41,12 +41,12 @@ export default function BurgerMenu({ open, club, onClose, onAddMember, onStartRe
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 bg-surface-raised border-l border-surface-border z-50 flex flex-col transition-transform duration-250 ease-out ${
+        className={`fixed top-0 right-0 h-full w-72 bg-surface-raised border-l border-white/[0.07] z-50 flex flex-col transition-transform duration-250 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border shrink-0">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.07] shrink-0">
           <div>
             <h2 className="text-white font-semibold text-sm">Members</h2>
             <p className="text-[11px] text-white/30 mt-0.5">
@@ -76,7 +76,7 @@ export default function BurgerMenu({ open, club, onClose, onAddMember, onStartRe
                 return (
                   <div
                     key={member.id}
-                    className={`flex items-center justify-between px-5 py-3 border-b border-surface-border/60 ${
+                    className={`flex items-center justify-between px-5 py-3 border-b border-white/[0.07]/60 ${
                       idx % 2 === 0 ? "" : "bg-surface/40"
                     }`}
                   >
@@ -92,7 +92,7 @@ export default function BurgerMenu({ open, club, onClose, onAddMember, onStartRe
         </div>
 
         {/* Footer */}
-        <div className="border-t border-surface-border p-4 flex flex-col gap-2 shrink-0">
+        <div className="border-t border-white/[0.07] p-4 flex flex-col gap-2 shrink-0">
           {addingMember ? (
             <div className="flex flex-col gap-2">
               <input
@@ -105,12 +105,12 @@ export default function BurgerMenu({ open, club, onClose, onAddMember, onStartRe
                   if (e.key === "Enter") handleAdd();
                   if (e.key === "Escape") { setAddingMember(false); setNewName(""); }
                 }}
-                className="bg-surface border border-surface-border rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors"
+                className="bg-surface border border-white/[0.07] rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors"
               />
               <div className="flex gap-2">
                 <button
                   onClick={() => { setAddingMember(false); setNewName(""); }}
-                  className="flex-1 py-2.5 rounded-xl border border-surface-border text-white/35 text-sm hover:border-white/15 transition-colors"
+                  className="flex-1 py-2.5 rounded-xl border border-white/[0.07] text-white/35 text-sm hover:border-white/15 transition-colors"
                 >
                   Cancel
                 </button>
@@ -133,7 +133,7 @@ export default function BurgerMenu({ open, club, onClose, onAddMember, onStartRe
               </button>
               <button
                 onClick={onStartRemove}
-                className="w-full py-2.5 rounded-xl border border-surface-border text-rose text-sm hover:border-rose/25 transition-colors"
+                className="w-full py-2.5 rounded-xl border border-white/[0.07] text-rose text-sm hover:border-rose/25 transition-colors"
               >
                 Remove Members
               </button>

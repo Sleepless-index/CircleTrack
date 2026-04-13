@@ -22,7 +22,7 @@ export default function EditFansModal({ member, weekData, onConfirm, onClose }: 
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4 animate-fade-in">
-      <div className="bg-surface-raised border border-surface-border rounded-2xl w-full max-w-sm p-5 flex flex-col gap-4">
+      <div className="bg-surface-raised border border-white/8 rounded-2xl w-full max-w-sm p-5 flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
@@ -49,7 +49,7 @@ export default function EditFansModal({ member, weekData, onConfirm, onClose }: 
               onChange={(e) => setPrev(e.target.value)}
               placeholder="0"
               autoFocus
-              className="bg-surface border border-surface-border rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors font-mono"
+              className="bg-surface border border-white/8 rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors font-mono"
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -60,13 +60,13 @@ export default function EditFansModal({ member, weekData, onConfirm, onClose }: 
               onChange={(e) => setCurrent(e.target.value)}
               placeholder="0"
               onKeyDown={(e) => e.key === "Enter" && onConfirm(prevNum, currentNum)}
-              className="bg-surface border border-surface-border rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors font-mono"
+              className="bg-surface border border-white/8 rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors font-mono"
             />
           </div>
 
           {/* Preview */}
           {showPreview && (
-            <div className="bg-surface rounded-xl px-4 py-2.5 flex justify-between items-center border border-surface-border">
+            <div className="bg-surface rounded-xl px-4 py-2.5 flex justify-between items-center border border-white/8">
               <span className="text-[11px] text-white/30">Fan increase</span>
               <span
                 className={`text-sm font-mono font-medium ${
@@ -87,7 +87,7 @@ export default function EditFansModal({ member, weekData, onConfirm, onClose }: 
         <div className="flex gap-2 pt-1">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 rounded-xl border border-surface-border text-white/40 text-sm hover:border-white/15 hover:text-white/60 transition-colors"
+            className="flex-1 py-2.5 rounded-xl border border-white/8 text-white/40 text-sm hover:border-white/15 hover:text-white/60 transition-colors"
           >
             Cancel
           </button>
