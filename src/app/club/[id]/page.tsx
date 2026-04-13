@@ -7,7 +7,10 @@ import { loadData, saveData } from "@/lib/store";
 import { getCurrentMonthKey, getWeeksInMonth, generateId } from "@/lib/utils";
 import WeekTabs from "@/components/WeekTabs";
 import FanTable from "@/components/FanTable";
+import FanCharts from "@/components/FanCharts";
 import BurgerMenu from "@/components/BurgerMenu";
+
+type Tab = "table" | "charts";
 
 export default function ClubPage() {
   const params = useParams();
@@ -16,6 +19,7 @@ export default function ClubPage() {
 
   const [data, setData] = useState<AppData>({ clubs: [], meta: { activeClub: null } });
   const [activeWeek, setActiveWeek] = useState(1);
+  const [activeTab, setActiveTab] = useState<Tab>("table");
   const [menuOpen, setMenuOpen] = useState(false);
   const [removeMode, setRemoveMode] = useState(false);
   const [selectedForRemoval, setSelectedForRemoval] = useState<Set<string>>(new Set());
@@ -31,16 +35,9 @@ export default function ClubPage() {
 
   const club = data.clubs.find((c) => c.id === id);
 
-  const updateData = (updated: AppData) => {
-    setData(updated);
-    saveData(updated);
-  };
-
+  const updateData = (updated: AppData) => { setData(updated); saveData(updated); };
   const updateClub = (updatedClub: Club) => {
-    updateData({
-      ...data,
-      clubs: data.clubs.map((c) => (c.id === id ? updatedClub : c)),
-    });
+    updateData({ ...data, clubs: data.clubs.map((c) => (c.id === id ? updatedClub : c)) });
   };
 
   const handleAddMember = (name: string) => {
@@ -51,10 +48,7 @@ export default function ClubPage() {
 
   const handleRemoveConfirm = () => {
     if (!club) return;
-    updateClub({
-      ...club,
-      members: club.members.filter((m) => !selectedForRemoval.has(m.id)),
-    });
+    updateClub({ ...club, members: club.members.filter((m) => !selectedForRemoval.has(m.id)) });
     setRemoveMode(false);
     setSelectedForRemoval(new Set());
   };
@@ -65,10 +59,20 @@ export default function ClubPage() {
       if (m.id !== memberId) return m;
       const history = { ...m.history };
       if (!history[monthKey]) history[monthKey] = { weeks: {} };
-      history[monthKey] = {
-        ...history[monthKey],
-        weeks: { ...history[monthKey].weeks, [String(activeWeek)]: { prev, current } },
-      };
+      history[monthKey] = { ...history[monthKey], weeks: { ...history[monthKey].weeks, [String(activeWeek)]: { prev, current } } };
+      return { ...m, history };
+    });
+    updateClub({ ...club, members: updatedMembers });
+  };
+
+  const handleBulkUpdate = (updates: { memberId: string; prev: number; current: number }[]) => {
+    if (!club) return;
+    const updatedMembers = club.members.map((m) => {
+      const upd = updates.find((u) => u.memberId === m.id);
+      if (!upd) return m;
+      const history = { ...m.history };
+      if (!history[monthKey]) history[monthKey] = { weeks: {} };
+      history[monthKey] = { ...history[monthKey], weeks: { ...history[monthKey].weeks, [String(activeWeek)]: { prev: upd.prev, current: upd.current } } };
       return { ...m, history };
     });
     updateClub({ ...club, members: updatedMembers });
@@ -86,10 +90,7 @@ export default function ClubPage() {
     return (
       <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4 font-sans">
         <p className="text-white/25 text-sm">Club not found.</p>
-        <button
-          onClick={() => router.push("/")}
-          className="text-white/40 text-sm hover:text-white/70 transition-colors"
-        >
+        <button onClick={() => router.push("/")} className="text-white/40 text-sm hover:text-white/70 transition-colors">
           ← Back to clubs
         </button>
       </div>
@@ -118,8 +119,6 @@ export default function ClubPage() {
             )}
           </div>
         </div>
-
-        {/* Menu button */}
         <button
           onClick={() => setMenuOpen(true)}
           className="flex flex-col gap-[5px] p-2 text-white/30 hover:text-white/60 transition-colors rounded-lg hover:bg-surface-hover"
@@ -131,23 +130,67 @@ export default function ClubPage() {
         </button>
       </header>
 
-      {/* Week Tabs */}
-      <WeekTabs weekCount={weekCount} activeWeek={activeWeek} onSelect={setActiveWeek} />
-
-      {/* Table */}
-      <div className={`flex-1 overflow-auto p-4 ${removeMode ? "pb-24" : ""}`}>
-        <FanTable
-          club={club}
-          activeWeek={activeWeek}
-          monthKey={monthKey}
-          removeMode={removeMode}
-          selectedForRemoval={selectedForRemoval}
-          onToggleRemove={toggleRemoval}
-          onUpdateFans={handleUpdateFans}
-        />
+      {/* Tab bar */}
+      <div className="flex border-b border-surface-border shrink-0 px-4 gap-1 pt-2">
+        {(["table", "charts"] as Tab[]).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 text-xs font-medium rounded-t-lg capitalize transition-all border-b-2 -mb-px ${
+              activeTab === tab
+                ? "text-white border-accent"
+                : "text-white/30 border-transparent hover:text-white/55"
+            }`}
+          >
+            {tab === "table" ? (
+              <span className="flex items-center gap-1.5">
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                  <rect x="1" y="1" width="10" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
+                  <line x1="1" y1="4.5" x2="11" y2="4.5" stroke="currentColor" strokeWidth="1"/>
+                  <line x1="5" y1="4.5" x2="5" y2="11" stroke="currentColor" strokeWidth="1"/>
+                </svg>
+                Table
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5">
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                  <polyline points="1,9 4,5 7,7 11,2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </svg>
+                Charts
+              </span>
+            )}
+          </button>
+        ))}
       </div>
 
-      {/* Remove Mode Footer */}
+      {/* Week tabs — only show in table mode */}
+      {activeTab === "table" && (
+        <WeekTabs weekCount={weekCount} activeWeek={activeWeek} onSelect={setActiveWeek} />
+      )}
+
+      {/* Content */}
+      <div className={`flex-1 overflow-auto p-4 ${removeMode ? "pb-24" : ""}`}>
+        {activeTab === "table" ? (
+          <FanTable
+            club={club}
+            activeWeek={activeWeek}
+            monthKey={monthKey}
+            removeMode={removeMode}
+            selectedForRemoval={selectedForRemoval}
+            onToggleRemove={toggleRemoval}
+            onUpdateFans={handleUpdateFans}
+            onBulkUpdate={handleBulkUpdate}
+          />
+        ) : (
+          <FanCharts
+            club={club}
+            monthKey={monthKey}
+            weekCount={weekCount}
+          />
+        )}
+      </div>
+
+      {/* Remove mode footer */}
       {removeMode && (
         <div className="fixed bottom-0 left-0 right-0 bg-surface-raised border-t border-surface-border p-4 flex gap-2 animate-fade-in">
           <button
