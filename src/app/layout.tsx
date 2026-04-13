@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Uma Club Tracker",
-  description: "Track your Umamusume club fan gains",
+  title: "Circle Fan sheet",
+  description: "Track your Circle's fan gains",
 };
 
 export default function RootLayout({
