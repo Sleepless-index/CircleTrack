@@ -1,7 +1,5 @@
 # Uma Club Tracker
 
-A Next.js app for tracking Umamusume club members' fan gains per week.
-
 ## Setup
 
 ```bash
@@ -29,12 +27,6 @@ Place your rank PNG files in the `/public/ranks/` folder using this exact naming
 | D+   | `D-plus.png`  |
 
 If a PNG is missing, the app falls back to displaying the rank text.
-
-## Deploying to Vercel
-
-1. Push this repo to GitHub
-2. Go to [vercel.com](https://vercel.com) → Import Project → select your repo
-3. Leave all settings as default → Deploy
 
 ## How It Works
 
