@@ -11,84 +11,66 @@ interface Props {
   onClose: () => void;
 }
 
-export default function EditFansModal({
-  member,
-  weekData,
-  onConfirm,
-  onClose,
-}: Props) {
-  const [prev, setPrev] = useState(
-    weekData.prev > 0 ? String(weekData.prev) : ""
-  );
-  const [current, setCurrent] = useState(
-    weekData.current > 0 ? String(weekData.current) : ""
-  );
+export default function EditFansModal({ member, weekData, onConfirm, onClose }: Props) {
+  const [prev, setPrev] = useState(weekData.prev > 0 ? String(weekData.prev) : "");
+  const [current, setCurrent] = useState(weekData.current > 0 ? String(weekData.current) : "");
 
   const prevNum = parseInt(prev) || 0;
   const currentNum = parseInt(current) || 0;
   const increase = currentNum - prevNum;
   const showPreview = prevNum > 0 || currentNum > 0;
 
-  const handleSubmit = () => {
-    onConfirm(prevNum, currentNum);
-  };
-
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-      <div className="bg-surface-raised border border-surface-overlay rounded-2xl w-full max-w-sm p-6 flex flex-col gap-5">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="bg-surface-raised border border-surface-border rounded-2xl w-full max-w-sm p-5 flex flex-col gap-4">
         {/* Header */}
-        <div>
-          <h2 className="font-display text-base font-semibold tracking-[0.2em] text-gold">
-            EDIT FANS
-          </h2>
-          <p className="text-white/30 text-sm font-body mt-0.5">
-            {member.name}
-          </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h2 className="text-white font-semibold text-base">Edit Fans</h2>
+            <p className="text-white/35 text-xs mt-0.5">{member.name}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-white/20 hover:text-white/50 transition-colors p-1 -mr-1"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 2L12 12M12 2L2 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
         </div>
 
         {/* Inputs */}
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] text-white/40 tracking-[0.2em] font-body">
-              PREVIOUS FANS
-            </label>
+            <label className="text-[11px] text-white/35 font-medium">Previous fans</label>
             <input
               type="number"
               value={prev}
               onChange={(e) => setPrev(e.target.value)}
               placeholder="0"
               autoFocus
-              className="bg-surface border border-surface-overlay rounded-xl px-4 py-3 text-white text-sm font-body placeholder:text-white/20 focus:outline-none focus:border-gold/40 transition-colors"
+              className="bg-surface border border-surface-border rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors font-mono"
             />
           </div>
-
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] text-white/40 tracking-[0.2em] font-body">
-              CURRENT FANS
-            </label>
+            <label className="text-[11px] text-white/35 font-medium">Current fans</label>
             <input
               type="number"
               value={current}
               onChange={(e) => setCurrent(e.target.value)}
               placeholder="0"
-              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-              className="bg-surface border border-surface-overlay rounded-xl px-4 py-3 text-white text-sm font-body placeholder:text-white/20 focus:outline-none focus:border-gold/40 transition-colors"
+              onKeyDown={(e) => e.key === "Enter" && onConfirm(prevNum, currentNum)}
+              className="bg-surface border border-surface-border rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors font-mono"
             />
           </div>
 
-          {/* Live Preview */}
+          {/* Preview */}
           {showPreview && (
-            <div className="bg-surface rounded-xl px-4 py-3 flex justify-between items-center border border-surface-overlay">
-              <span className="text-[10px] text-white/30 font-body tracking-[0.2em]">
-                FAN INCREASE
-              </span>
+            <div className="bg-surface rounded-xl px-4 py-2.5 flex justify-between items-center border border-surface-border">
+              <span className="text-[11px] text-white/30">Fan increase</span>
               <span
-                className={`text-sm font-body font-semibold ${
-                  increase > 0
-                    ? "text-gold"
-                    : increase < 0
-                    ? "text-rose"
-                    : "text-white/30"
+                className={`text-sm font-mono font-medium ${
+                  increase > 0 ? "text-emerald" : increase < 0 ? "text-rose" : "text-white/25"
                 }`}
               >
                 {increase > 0
@@ -102,16 +84,16 @@ export default function EditFansModal({
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="flex gap-2 pt-1">
           <button
             onClick={onClose}
-            className="flex-1 py-3 rounded-xl bg-surface border border-surface-overlay text-white/40 text-sm font-body hover:border-white/20 transition-colors"
+            className="flex-1 py-2.5 rounded-xl border border-surface-border text-white/40 text-sm hover:border-white/15 hover:text-white/60 transition-colors"
           >
             Cancel
           </button>
           <button
-            onClick={handleSubmit}
-            className="flex-1 py-3 rounded-xl bg-gold text-bg text-sm font-body font-semibold tracking-wider hover:bg-gold-light transition-colors"
+            onClick={() => onConfirm(prevNum, currentNum)}
+            className="flex-1 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent-light transition-colors"
           >
             Save
           </button>

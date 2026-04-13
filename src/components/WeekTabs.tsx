@@ -6,18 +6,18 @@ interface Props {
 
 export default function WeekTabs({ weekCount, activeWeek, onSelect }: Props) {
   return (
-    <div className="flex border-b border-surface-overlay overflow-x-auto shrink-0">
+    <div className="flex gap-1 px-4 py-3 border-b border-surface-border overflow-x-auto shrink-0">
       {Array.from({ length: weekCount }, (_, i) => i + 1).map((week) => (
         <button
           key={week}
           onClick={() => onSelect(week)}
-          className={`px-6 py-4 text-[11px] font-body tracking-[0.2em] whitespace-nowrap transition-all border-b-2 -mb-px ${
+          className={`px-4 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
             activeWeek === week
-              ? "border-gold text-gold"
-              : "border-transparent text-white/30 hover:text-white/60"
+              ? "bg-accent-dim text-accent border border-accent/25"
+              : "text-white/30 hover:text-white/60 hover:bg-surface-hover"
           }`}
         >
-          WEEK {week}
+          Week {week}
         </button>
       ))}
     </div>

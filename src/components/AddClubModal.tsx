@@ -19,16 +19,19 @@ export default function AddClubModal({ onConfirm, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-      <div className="bg-surface-raised border border-surface-overlay rounded-2xl w-full max-w-sm p-6 flex flex-col gap-5">
-        <h2 className="font-display text-base font-semibold tracking-[0.2em] text-gold">
-          ADD CLUB
-        </h2>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="bg-surface-raised border border-surface-border rounded-2xl w-full max-w-sm p-5 flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-white font-semibold text-base">New Club</h2>
+          <button onClick={onClose} className="text-white/20 hover:text-white/50 transition-colors p-1 -mr-1">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 2L12 12M12 2L2 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
 
-        <div className="flex flex-col gap-2">
-          <label className="text-[10px] text-white/40 tracking-[0.2em] font-body">
-            CLUB NAME
-          </label>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[11px] text-white/35 font-medium">Club name</label>
           <input
             type="text"
             value={name}
@@ -36,23 +39,23 @@ export default function AddClubModal({ onConfirm, onClose }: Props) {
             placeholder="Enter club name…"
             autoFocus
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-            className="bg-surface border border-surface-overlay rounded-xl px-4 py-3 text-white text-sm font-body placeholder:text-white/20 focus:outline-none focus:border-gold/40 transition-colors"
+            className="bg-surface border border-surface-border rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-white/15 focus:outline-none focus:border-white/20 transition-colors"
           />
         </div>
 
         <RankSelector value={rank} onChange={setRank} />
 
-        <div className="flex gap-3 pt-1">
+        <div className="flex gap-2 pt-1">
           <button
             onClick={onClose}
-            className="flex-1 py-3 rounded-xl bg-surface border border-surface-overlay text-white/40 text-sm font-body hover:border-white/20 transition-colors"
+            className="flex-1 py-2.5 rounded-xl border border-surface-border text-white/40 text-sm hover:border-white/15 hover:text-white/60 transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={!name.trim()}
-            className="flex-1 py-3 rounded-xl bg-gold text-bg text-sm font-body font-semibold tracking-wider hover:bg-gold-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="flex-1 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Create
           </button>

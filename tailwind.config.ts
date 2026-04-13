@@ -9,26 +9,35 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        accent: {
+          DEFAULT: "#4f8ef7",
+          light: "#7aabff",
+          dim: "rgba(79,142,247,0.12)",
+        },
+        emerald: "#34d97b",
+        rose: "#f06b85",
+        amber: "#f5a623",
+        bg: "#080a0f",
+        surface: {
+          DEFAULT: "#0f1218",
+          raised: "#161b24",
+          border: "rgba(255,255,255,0.07)",
+          hover: "rgba(255,255,255,0.04)",
+        },
         gold: {
           DEFAULT: "#e8b84b",
           light: "#f5d080",
-          dark: "#c49a2e",
-        },
-        rose: "#e87c9a",
-        bg: "#0d0d14",
-        surface: {
-          DEFAULT: "#161622",
-          raised: "#1e1e2e",
-          overlay: "#252538",
         },
       },
       fontFamily: {
-        display: ["Cinzel", "serif"],
-        body: ["Outfit", "sans-serif"],
+        sans: ["DM Sans", "sans-serif"],
+        mono: ["DM Mono", "monospace"],
+        display: ["DM Sans", "sans-serif"],
+        body: ["DM Sans", "sans-serif"],
       },
       animation: {
-        "slide-in": "slideIn 0.3s ease-out",
-        "fade-in": "fadeIn 0.2s ease-out",
+        "slide-in": "slideIn 0.25s ease-out",
+        "fade-in": "fadeIn 0.15s ease-out",
       },
       keyframes: {
         slideIn: {

@@ -67,10 +67,7 @@ export default function ClubPage() {
       if (!history[monthKey]) history[monthKey] = { weeks: {} };
       history[monthKey] = {
         ...history[monthKey],
-        weeks: {
-          ...history[monthKey].weeks,
-          [String(activeWeek)]: { prev, current },
-        },
+        weeks: { ...history[monthKey].weeks, [String(activeWeek)]: { prev, current } },
       };
       return { ...m, history };
     });
@@ -87,11 +84,11 @@ export default function ClubPage() {
 
   if (!club) {
     return (
-      <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4">
-        <p className="text-white/30 font-body">Club not found.</p>
+      <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4 font-sans">
+        <p className="text-white/25 text-sm">Club not found.</p>
         <button
           onClick={() => router.push("/")}
-          className="text-gold/60 text-sm font-body hover:text-gold transition-colors"
+          className="text-white/40 text-sm hover:text-white/70 transition-colors"
         >
           ← Back to clubs
         </button>
@@ -100,50 +97,44 @@ export default function ClubPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg flex flex-col">
+    <div className="min-h-screen bg-bg flex flex-col font-sans">
       {/* Header */}
-      <header className="border-b border-surface-overlay px-4 py-4 flex items-center justify-between shrink-0">
+      <header className="border-b border-surface-border px-4 py-3.5 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.push("/")}
-            className="text-white/30 hover:text-gold transition-colors p-1 -ml-1"
+            className="text-white/25 hover:text-white/60 transition-colors p-1.5 rounded-lg hover:bg-surface-hover -ml-1.5"
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path
-                d="M13 4L7 10L13 16"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
-          <h1 className="font-display text-base font-semibold tracking-[0.15em] text-white">
-            {club.name}
-          </h1>
-          {club.rank && (
-            <span className="text-[10px] text-gold font-body bg-gold/10 border border-gold/20 px-2 py-0.5 rounded-full tracking-wider">
-              {displayRank(club.rank)}
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            <h1 className="font-semibold text-sm text-white tracking-tight">{club.name}</h1>
+            {club.rank && (
+              <span className="text-[10px] text-white/40 font-mono bg-surface-raised border border-surface-border px-1.5 py-0.5 rounded-md">
+                {displayRank(club.rank)}
+              </span>
+            )}
+          </div>
         </div>
 
-        {/* Burger Icon */}
+        {/* Menu button */}
         <button
           onClick={() => setMenuOpen(true)}
-          className="flex flex-col gap-1.5 p-2 text-white/40 hover:text-gold transition-colors"
+          className="flex flex-col gap-[5px] p-2 text-white/30 hover:text-white/60 transition-colors rounded-lg hover:bg-surface-hover"
           aria-label="Open menu"
         >
-          <span className="w-5 h-px bg-current block" />
           <span className="w-4 h-px bg-current block" />
-          <span className="w-5 h-px bg-current block" />
+          <span className="w-3 h-px bg-current block" />
+          <span className="w-4 h-px bg-current block" />
         </button>
       </header>
 
       {/* Week Tabs */}
       <WeekTabs weekCount={weekCount} activeWeek={activeWeek} onSelect={setActiveWeek} />
 
-      {/* Table Area */}
+      {/* Table */}
       <div className={`flex-1 overflow-auto p-4 ${removeMode ? "pb-24" : ""}`}>
         <FanTable
           club={club}
@@ -158,38 +149,30 @@ export default function ClubPage() {
 
       {/* Remove Mode Footer */}
       {removeMode && (
-        <div className="fixed bottom-0 left-0 right-0 bg-surface-raised border-t border-surface-overlay p-4 flex gap-3 animate-fade-in">
+        <div className="fixed bottom-0 left-0 right-0 bg-surface-raised border-t border-surface-border p-4 flex gap-2 animate-fade-in">
           <button
-            onClick={() => {
-              setRemoveMode(false);
-              setSelectedForRemoval(new Set());
-            }}
-            className="flex-1 py-3 rounded-xl bg-surface border border-surface-overlay text-white/40 font-body text-sm hover:border-white/20 transition-colors"
+            onClick={() => { setRemoveMode(false); setSelectedForRemoval(new Set()); }}
+            className="flex-1 py-2.5 rounded-xl border border-surface-border text-white/35 text-sm hover:border-white/15 transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleRemoveConfirm}
             disabled={selectedForRemoval.size === 0}
-            className="flex-1 py-3 rounded-xl bg-rose/80 text-white font-body text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-rose transition-colors"
+            className="flex-1 py-2.5 rounded-xl bg-rose/80 text-white text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-rose transition-colors"
           >
-            {selectedForRemoval.size > 0
-              ? `Remove (${selectedForRemoval.size})`
-              : "Select members"}
+            {selectedForRemoval.size > 0 ? `Remove (${selectedForRemoval.size})` : "Select members"}
           </button>
         </div>
       )}
 
-      {/* Burger Drawer */}
+      {/* Drawer */}
       <BurgerMenu
         open={menuOpen}
         club={club}
         onClose={() => setMenuOpen(false)}
         onAddMember={handleAddMember}
-        onStartRemove={() => {
-          setMenuOpen(false);
-          setRemoveMode(true);
-        }}
+        onStartRemove={() => { setMenuOpen(false); setRemoveMode(true); }}
       />
     </div>
   );

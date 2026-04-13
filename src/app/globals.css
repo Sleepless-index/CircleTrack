@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap");
 
 * {
   box-sizing: border-box;
@@ -10,8 +10,9 @@
 
 html,
 body {
-  background-color: #0d0d14;
+  background-color: #080a0f;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 ::-webkit-scrollbar {
@@ -19,14 +20,14 @@ body {
   height: 3px;
 }
 ::-webkit-scrollbar-track {
-  background: #161622;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #e8b84b44;
+  background: rgba(255,255,255,0.08);
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #e8b84b88;
+  background: rgba(255,255,255,0.15);
 }
 
 input[type="number"]::-webkit-inner-spin-button,
