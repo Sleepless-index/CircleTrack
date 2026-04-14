@@ -96,6 +96,15 @@ export default function ClubPage() {
     updateClub({ ...club, members: updatedMembers });
   };
 
+
+  const handleUpdateQuota = (memberId: string, quota: number | undefined) => {
+    if (!club) return;
+    const updatedMembers = club.members.map((m) =>
+      m.id === memberId ? { ...m, quota } : m
+    );
+    updateClub({ ...club, members: updatedMembers });
+  };
+
   const handleBulkUpdate = (updates: { memberId: string; prev: number; current: number }[]) => {
     if (!club) return;
     const updatedMembers = club.members.map((m) => {
@@ -208,6 +217,7 @@ export default function ClubPage() {
             selectedForRemoval={selectedForRemoval}
             onToggleRemove={toggleRemoval}
             onUpdateFans={handleUpdateFans}
+            onUpdateQuota={handleUpdateQuota}
             onBulkUpdate={handleBulkUpdate}
           />
         ) : (

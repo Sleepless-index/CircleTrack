@@ -36,7 +36,7 @@ export default function EditClubModal({ club, onConfirm, onClose }: Props) {
           <button
             type="button"
             onClick={() => setPickingRank(true)}
-            className="w-24 h-24 rounded-2xl border border-dashed border-surface-overlay hover:border-white/20 flex flex-col items-center justify-center gap-1.5 transition-all group bg-surface"
+            className="w-24 h-24 rounded-2xl border border-dashed border-white/[0.08] hover:border-white/20 flex flex-col items-center justify-center gap-1.5 transition-all group bg-surface"
           >
             {rank ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -109,7 +109,7 @@ export default function EditClubModal({ club, onConfirm, onClose }: Props) {
                 className={`aspect-square rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${
                   rank === null
                     ? "border-accent bg-accent/10"
-                    : "border-surface-overlay hover:border-white/20 bg-surface"
+                    : "border-white/[0.08] hover:border-white/20 bg-surface"
                 }`}
               >
                 <span className="text-white/25 text-lg leading-none">—</span>
@@ -124,7 +124,7 @@ export default function EditClubModal({ club, onConfirm, onClose }: Props) {
                   className={`aspect-square rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${
                     rank === r
                       ? "border-accent bg-accent/10"
-                      : "border-surface-overlay hover:border-white/20 bg-surface"
+                      : "border-white/[0.08] hover:border-white/20 bg-surface"
                   }`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}

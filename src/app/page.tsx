@@ -19,8 +19,7 @@ export default function LandingPage() {
   useEffect(() => { setData(loadData()); }, []);
 
   const handleAddClub = (name: string, rank: Rank) => {
-    const newClub: Club = { id: generateId(), name, rank, members: [] };
-    const updated = { ...data, clubs: [...data.clubs, newClub] };
+    const updated = { ...data, clubs: [...data.clubs, { id: generateId(), name, rank, members: [] }] };
     setData(updated); saveData(updated); setShowAdd(false);
   };
 
@@ -36,10 +35,10 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-bg font-sans">
-      <header className="px-5 py-5 flex items-center justify-between border-b border-white/[0.07]">
-        <div className="flex items-center gap-3">
-          <div className="w-7 h-7 rounded-lg bg-accent-dim flex items-center justify-center">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <header className="px-5 py-4 flex items-center justify-between border-b border-white/[0.06]">
+        <div className="flex items-center gap-2.5">
+          <div className="w-6 h-6 rounded-lg bg-accent-dim flex items-center justify-center">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
               <circle cx="7" cy="7" r="5" stroke="#4f8ef7" strokeWidth="1.5"/>
               <path d="M7 4v3l2 1.5" stroke="#4f8ef7" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
@@ -51,7 +50,7 @@ export default function LandingPage() {
         </span>
       </header>
 
-      <main className="p-5">
+      <main className="p-4">
         {data.clubs.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 gap-2">
             <p className="text-white/25 text-sm">No clubs yet.</p>
@@ -59,7 +58,8 @@ export default function LandingPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        {/* Smaller cards — 3 cols on mobile, more on larger screens */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2.5">
           {data.clubs.map((club) => (
             <ClubCard
               key={club.id}
@@ -72,12 +72,12 @@ export default function LandingPage() {
 
           <button
             onClick={() => setShowAdd(true)}
-            className="aspect-square rounded-2xl border border-dashed border-white/8 hover:border-white/15 flex flex-col items-center justify-center gap-2 transition-all duration-200 hover:bg-white/[0.02] group"
+            className="aspect-square rounded-xl border border-dashed border-white/8 hover:border-white/15 flex flex-col items-center justify-center gap-1.5 transition-all duration-200 hover:bg-white/[0.02] group"
           >
-            <div className="w-8 h-8 rounded-full border border-dashed border-white/10 group-hover:border-white/20 flex items-center justify-center transition-colors">
-              <span className="text-white/20 group-hover:text-white/40 text-lg leading-none transition-colors">+</span>
+            <div className="w-6 h-6 rounded-full border border-dashed border-white/10 group-hover:border-white/20 flex items-center justify-center transition-colors">
+              <span className="text-white/20 group-hover:text-white/40 text-base leading-none transition-colors">+</span>
             </div>
-            <span className="text-[10px] text-white/20 group-hover:text-white/35 tracking-wider uppercase transition-colors">New Club</span>
+            <span className="text-[9px] text-white/18 group-hover:text-white/30 tracking-wider uppercase transition-colors">New</span>
           </button>
         </div>
       </main>
@@ -91,7 +91,6 @@ export default function LandingPage() {
         />
       )}
 
-      {/* Delete confirmation modal */}
       {deletingClub && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-surface-raised border border-white/8 rounded-2xl w-full max-w-sm p-5 flex flex-col gap-4">
@@ -102,16 +101,12 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="flex gap-2">
-              <button
-                onClick={() => setDeletingClub(null)}
-                className="flex-1 py-2.5 rounded-xl border border-white/10 text-white/40 text-sm hover:border-white/20 transition-colors"
-              >
+              <button onClick={() => setDeletingClub(null)}
+                className="flex-1 py-2.5 rounded-xl border border-white/10 text-white/40 text-sm hover:border-white/20 transition-colors">
                 Cancel
               </button>
-              <button
-                onClick={() => handleDeleteClub(deletingClub.id)}
-                className="flex-1 py-2.5 rounded-xl bg-rose text-white text-sm font-semibold hover:opacity-90 transition-opacity"
-              >
+              <button onClick={() => handleDeleteClub(deletingClub.id)}
+                className="flex-1 py-2.5 rounded-xl bg-rose text-white text-sm font-semibold hover:opacity-90 transition-opacity">
                 Delete
               </button>
             </div>

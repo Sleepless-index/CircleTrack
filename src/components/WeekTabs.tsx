@@ -6,7 +6,7 @@ interface Props {
 
 export default function WeekTabs({ weekCount, activeWeek, onSelect }: Props) {
   return (
-    <div className="flex gap-1 px-4 py-3 border-b border-surface-border overflow-x-auto shrink-0">
+    <div className="flex gap-1 px-4 py-3 border-b border-white/[0.06] overflow-x-auto shrink-0">
       {Array.from({ length: weekCount }, (_, i) => i + 1).map((week) => (
         <button
           key={week}

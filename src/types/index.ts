@@ -12,16 +12,7 @@ export type Rank =
   | null;
 
 export const RANKS: Exclude<Rank, null>[] = [
-  "SS",
-  "S-plus",
-  "S",
-  "A-plus",
-  "A",
-  "B-plus",
-  "B",
-  "C-plus",
-  "C",
-  "D-plus",
+  "SS", "S-plus", "S", "A-plus", "A", "B-plus", "B", "C-plus", "C", "D-plus",
 ];
 
 export function displayRank(rank: Rank): string {
@@ -36,7 +27,6 @@ export interface WeekData {
 
 export interface MemberHistory {
   [monthKey: string]: {
-    // e.g. "2026-04"
     weeks: {
       [weekNum: string]: WeekData;
     };
@@ -46,6 +36,7 @@ export interface MemberHistory {
 export interface Member {
   id: string;
   name: string;
+  quota?: number; // optional weekly fan gain quota
   history: MemberHistory;
 }
 
