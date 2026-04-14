@@ -97,12 +97,9 @@ export default function ClubPage() {
   };
 
 
-  const handleUpdateQuota = (memberId: string, quota: number | undefined) => {
+  const handleUpdateQuota = (quota: number | undefined) => {
     if (!club) return;
-    const updatedMembers = club.members.map((m) =>
-      m.id === memberId ? { ...m, quota } : m
-    );
-    updateClub({ ...club, members: updatedMembers });
+    updateClub({ ...club, quota });
   };
 
   const handleBulkUpdate = (updates: { memberId: string; prev: number; current: number }[]) => {

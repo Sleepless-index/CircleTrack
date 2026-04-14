@@ -71,14 +71,10 @@ export default function BurgerMenu({ open, club, onClose, onAddMember, onStartRe
                       {idx + 1}
                     </span>
 
-                    {/* Name + quota hint */}
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm font-medium truncate ${isTop ? "text-white" : "text-white/70"}`}>
                         {member.name}
                       </p>
-                      {member.quota != null && (
-                        <p className="text-[10px] text-amber/40 font-mono">quota {formatFans(member.quota)}</p>
-                      )}
                     </div>
 
                     {/* Fan count */}

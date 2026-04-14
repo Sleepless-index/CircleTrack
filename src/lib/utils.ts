@@ -26,9 +26,11 @@ export function formatFans(n: number): string {
 }
 
 export function getLatestCurrentFans(member: Member): number {
+  // Sort month keys descending (lexicographic is fine for YYYY-MM)
   const monthKeys = Object.keys(member.history).sort().reverse();
   for (const mk of monthKeys) {
     const weeks = member.history[mk]?.weeks ?? {};
+    // MUST sort numerically, not lexicographically ("10" > "9" but "10" < "9" as string)
     const weekNums = Object.keys(weeks).sort((a, b) => Number(b) - Number(a));
     for (const wn of weekNums) {
       if (weeks[wn].current > 0) return weeks[wn].current;

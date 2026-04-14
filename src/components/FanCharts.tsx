@@ -26,18 +26,16 @@ export default function FanCharts({ club, monthKey, weekCount }: Props) {
       data: weeks.map((w) => m.history?.[monthKey]?.weeks?.[String(w)]?.current ?? 0),
       increases: weeks.map((w) => {
         const wd = m.history?.[monthKey]?.weeks?.[String(w)];
-        if (!wd) return 0;
-        return wd.current - wd.prev;
+        return wd ? wd.current - wd.prev : 0;
       }),
     })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [club.members, monthKey, weekCount]
   );
 
-  // Total fans: sum of latest non-zero current value per member
+  // Total fans: sum of each member's latest non-zero current
   const totalFans = useMemo(() => {
     return club.members.reduce((sum, m) => {
-      // find the latest week with current > 0
       for (let w = weekCount; w >= 1; w--) {
         const cur = m.history?.[monthKey]?.weeks?.[String(w)]?.current;
         if (cur && cur > 0) return sum + cur;
@@ -57,6 +55,7 @@ export default function FanCharts({ club, monthKey, weekCount }: Props) {
     { name: "—", total: 0, color: COLORS[0] }
   );
 
+  // Weekly highest FAN COUNT (not increase) — numeric sort on week keys
   const weeklyHighest = weeks.map((_, wi) =>
     memberSeries.reduce(
       (b, s) => (s.data[wi] > b.val ? { name: s.member.name, val: s.data[wi], color: s.color } : b),
@@ -76,8 +75,7 @@ export default function FanCharts({ club, monthKey, weekCount }: Props) {
 
   const VW = 400; const VH = 160;
   const PL = 8; const PR = 8; const PT = 10; const PB = 24;
-  const plotW = VW - PL - PR;
-  const plotH = VH - PT - PB;
+  const plotW = VW - PL - PR; const plotH = VH - PT - PB;
   const xOf = (wi: number) => weeks.length > 1 ? PL + (wi / (weeks.length - 1)) * plotW : PL + plotW / 2;
   const yOf = (val: number) => PT + plotH - (val / (maxVal || 1)) * plotH;
 
@@ -87,7 +85,7 @@ export default function FanCharts({ club, monthKey, weekCount }: Props) {
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-surface rounded-xl border border-white/[0.07] p-4">
           <p className="text-[11px] text-white/30 mb-2">Top gainer this month</p>
-          <p className="text-sm font-semibold truncate" style={{ color: hasAnyData ? topGainer.color : undefined }}>
+          <p className="text-sm font-semibold truncate" style={{ color: hasAnyData && topGainer.total > 0 ? topGainer.color : undefined }}>
             {hasAnyData && topGainer.total > 0 ? topGainer.name : <span className="text-white/25">—</span>}
           </p>
           <p className="text-[11px] text-white/40 font-mono mt-0.5">
@@ -125,14 +123,11 @@ export default function FanCharts({ club, monthKey, weekCount }: Props) {
               ))}
               {memberSeries.map((s) => {
                 if (!s.data.some((v) => v > 0)) return null;
-                const pts = s.data.map((v, wi) => `${xOf(wi)},${yOf(v)}`).join(" ");
                 return (
                   <g key={s.member.id}>
-                    <polyline points={pts} fill="none" stroke={s.color} strokeWidth="2"
-                      strokeLinejoin="round" strokeLinecap="round" opacity="0.85" />
-                    {s.data.map((v, wi) => v > 0 ? (
-                      <circle key={wi} cx={xOf(wi)} cy={yOf(v)} r="3.5" fill={s.color} />
-                    ) : null)}
+                    <polyline points={s.data.map((v, wi) => `${xOf(wi)},${yOf(v)}`).join(" ")}
+                      fill="none" stroke={s.color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" opacity="0.85" />
+                    {s.data.map((v, wi) => v > 0 ? <circle key={wi} cx={xOf(wi)} cy={yOf(v)} r="3.5" fill={s.color} /> : null)}
                   </g>
                 );
               })}
@@ -147,54 +142,105 @@ export default function FanCharts({ club, monthKey, weekCount }: Props) {
             </div>
           </div>
 
-          {/* Fan Increase bar chart */}
-          <div className="bg-surface rounded-xl border border-white/[0.07] p-4">
-            <p className="text-[11px] text-white/40 font-semibold uppercase tracking-widest mb-4">Fan Increase per Week</p>
-            <div className="flex flex-col gap-4">
-              {weeks.map((w, wi) => {
-                const weekInc = memberSeries
-                  .map((s) => ({ name: s.member.name, val: s.increases[wi], color: s.color }))
-                  .filter((x) => x.val !== 0);
-                if (weekInc.length === 0) return null;
-                const wMax = Math.max(...weekInc.map((x) => Math.abs(x.val)), 1);
-                return (
-                  <div key={w}>
-                    <p className="text-[10px] text-white/25 mb-2 font-mono">Week {w}</p>
-                    <div className="flex flex-col gap-1.5">
-                      {weekInc.map(({ name, val, color }) => (
-                        <div key={name} className="flex items-center gap-2">
-                          <span className="text-[10px] text-white/40 w-20 truncate shrink-0">{name}</span>
-                          <div className="flex-1 h-3 flex items-center">
-                            <div className="h-1.5 rounded-full"
-                              style={{ width: `${Math.min((Math.abs(val) / wMax) * 100, 100)}%`, backgroundColor: val > 0 ? color : "#f06b85", opacity: 0.8 }} />
-                          </div>
-                          <span className="text-[10px] font-mono w-16 text-right shrink-0" style={{ color: val > 0 ? color : "#f06b85" }}>
-                            {val > 0 ? `+${formatFans(val)}` : formatFans(val)}
-                          </span>
-                        </div>
+          {/* Fan Increase per Week — redesigned */}
+          <div className="bg-surface rounded-xl border border-white/[0.07] overflow-hidden">
+            <div className="px-4 pt-4 pb-3 border-b border-white/[0.06]">
+              <p className="text-[11px] text-white/40 font-semibold uppercase tracking-widest">Fan Increase per Week</p>
+            </div>
+
+            {weeks.map((w, wi) => {
+              const weekInc = memberSeries
+                .map((s) => ({ name: s.member.name, val: s.increases[wi], color: s.color }))
+                .filter((x) => x.val !== 0)
+                .sort((a, b) => b.val - a.val);
+              if (weekInc.length === 0) return null;
+
+              const totalInc = weekInc.reduce((sum, x) => sum + Math.max(x.val, 0), 0);
+              const wMax = Math.max(...weekInc.map((x) => Math.abs(x.val)), 1);
+
+              return (
+                <div key={w} className={wi > 0 ? "border-t border-white/[0.06]" : ""}>
+                  {/* Week header */}
+                  <div className="flex items-center justify-between px-4 py-2.5 bg-white/[0.02]">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-semibold text-white/60">Week {w}</span>
+                      <span className="text-[10px] font-mono text-white/20">{weekInc.length} members</span>
+                    </div>
+                    <span className="text-[11px] font-mono text-emerald/70">
+                      +{formatFans(totalInc)} total
+                    </span>
+                  </div>
+
+                  {/* Stacked bar — visual overview */}
+                  <div className="px-4 py-2">
+                    <div className="flex h-2 rounded-full overflow-hidden gap-px">
+                      {weekInc.filter(x => x.val > 0).map(({ name, val, color }) => (
+                        <div key={name} title={`${name}: +${formatFans(val)}`}
+                          style={{ flex: val, backgroundColor: color, opacity: 0.75 }} />
                       ))}
                     </div>
                   </div>
-                );
-              })}
-            </div>
+
+                  {/* Member rows */}
+                  <div className="px-4 pb-3 flex flex-col gap-1.5">
+                    {weekInc.map(({ name, val, color }, ri) => (
+                      <div key={name} className="flex items-center gap-2">
+                        <span className="text-[10px] text-white/20 w-4 text-right shrink-0 font-mono">{ri + 1}</span>
+                        <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: val > 0 ? color : "#f06b85" }} />
+                        <span className="text-[11px] text-white/55 w-20 truncate shrink-0">{name}</span>
+                        <div className="flex-1 h-3 flex items-center">
+                          <div className="h-1 rounded-full"
+                            style={{ width: `${Math.min((Math.abs(val) / wMax) * 100, 100)}%`, backgroundColor: val > 0 ? color : "#f06b85", opacity: 0.6 }} />
+                        </div>
+                        <span className="text-[11px] font-mono font-medium w-20 text-right shrink-0"
+                          style={{ color: val > 0 ? color : "#f06b85" }}>
+                          {val > 0 ? `+${formatFans(val)}` : formatFans(val)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
-          {/* Weekly leaderboard */}
-          <div className="bg-surface rounded-xl border border-white/[0.07] p-4">
-            <p className="text-[11px] text-white/40 font-semibold uppercase tracking-widest mb-3">Weekly Leaders</p>
-            <div className="flex flex-col">
+          {/* Weekly Leaders — highest fan COUNT that week */}
+          <div className="bg-surface rounded-xl border border-white/[0.07] overflow-hidden">
+            <div className="px-4 pt-4 pb-3 border-b border-white/[0.06]">
+              <p className="text-[11px] text-white/40 font-semibold uppercase tracking-widest">Weekly Fan Leaders</p>
+              <p className="text-[10px] text-white/20 mt-0.5">Highest fan count per week</p>
+            </div>
+            <div className="divide-y divide-white/[0.04]">
               {weeks.map((w, wi) => {
                 const best = weeklyHighest[wi];
                 if (best.val === 0) return null;
+                // Top 3 for this week
+                const top3 = [...memberSeries]
+                  .filter(s => s.data[wi] > 0)
+                  .sort((a, b) => b.data[wi] - a.data[wi])
+                  .slice(0, 3);
                 return (
-                  <div key={w} className="flex items-center justify-between py-2.5 border-b border-white/[0.05] last:border-0">
-                    <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-mono text-white/25 w-10">Wk {w}</span>
-                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: best.color }} />
-                      <span className="text-sm text-white/70 font-medium">{best.name}</span>
+                  <div key={w} className="px-4 py-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-semibold text-white/50">Week {w}</span>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: best.color }} />
+                        <span className="text-xs font-medium" style={{ color: best.color }}>{best.name}</span>
+                        <span className="text-[11px] font-mono text-white/35">{formatFans(best.val)}</span>
+                      </div>
                     </div>
-                    <span className="text-xs font-mono text-white/50">{formatFans(best.val)}</span>
+                    {/* Podium mini-list */}
+                    <div className="flex flex-col gap-1">
+                      {top3.map((s, rank) => (
+                        <div key={s.member.id} className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono text-white/20 w-3">{rank + 1}</span>
+                          <div className="flex-1 h-1 rounded-full bg-white/5 overflow-hidden">
+                            <div className="h-full rounded-full" style={{ width: `${(s.data[wi] / top3[0].data[wi]) * 100}%`, backgroundColor: s.color, opacity: 0.6 }} />
+                          </div>
+                          <span className="text-[10px] font-mono text-white/30 w-24 text-right">{formatFans(s.data[wi])}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 );
               })}

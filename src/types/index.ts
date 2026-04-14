@@ -1,15 +1,5 @@
 export type Rank =
-  | "SS"
-  | "S-plus"
-  | "S"
-  | "A-plus"
-  | "A"
-  | "B-plus"
-  | "B"
-  | "C-plus"
-  | "C"
-  | "D-plus"
-  | null;
+  | "SS" | "S-plus" | "S" | "A-plus" | "A" | "B-plus" | "B" | "C-plus" | "C" | "D-plus" | null;
 
 export const RANKS: Exclude<Rank, null>[] = [
   "SS", "S-plus", "S", "A-plus", "A", "B-plus", "B", "C-plus", "C", "D-plus",
@@ -27,16 +17,13 @@ export interface WeekData {
 
 export interface MemberHistory {
   [monthKey: string]: {
-    weeks: {
-      [weekNum: string]: WeekData;
-    };
+    weeks: { [weekNum: string]: WeekData };
   };
 }
 
 export interface Member {
   id: string;
   name: string;
-  quota?: number; // optional weekly fan gain quota
   history: MemberHistory;
 }
 
@@ -44,12 +31,11 @@ export interface Club {
   id: string;
   name: string;
   rank: Rank;
+  quota?: number; // club-wide weekly fan gain target per member
   members: Member[];
 }
 
 export interface AppData {
   clubs: Club[];
-  meta: {
-    activeClub: string | null;
-  };
+  meta: { activeClub: string | null };
 }
