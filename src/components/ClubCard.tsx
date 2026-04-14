@@ -34,10 +34,15 @@ export default function ClubCard({ club, onClick, onEdit, onDelete }: Props) {
           </div>
         </div>
 
-        <p className="font-semibold text-[11px] text-white/75 text-center leading-snug group-hover:text-white/90 transition-colors line-clamp-2 w-full">
-          {club.name}
-        </p>
-        <p className="text-[9px] text-white/20">{club.members.length}m</p>
+        {/* Name + member count on same line */}
+        <div className="flex flex-col items-center gap-0.5 w-full">
+          <p className="font-semibold text-[11px] text-white/75 text-center leading-snug group-hover:text-white/90 transition-colors line-clamp-2 w-full">
+            {club.name}
+          </p>
+          <p className="text-[9px] text-white/20">
+            {club.members.length} {club.members.length === 1 ? "member" : "members"}
+          </p>
+        </div>
       </button>
 
       {/* Action buttons */}
